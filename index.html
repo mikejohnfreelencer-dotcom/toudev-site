@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TouDev — Digital Growth Partner · Québec</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Syne:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ⚙ CONFIG RAPIDE — MODIFIE CES VALEURS SEULEMENT
+   ============================================================ */
+:root {
+  --gold: #F59E0B;          /* Couleur accent */
+  --gold-light: #FCD34D;
+  --gold-dark: #D97706;
+  --navy: #04080F;          /* Fond principal */
+  --navy-mid: #080F1E;
+  --navy-light: #0D1A32;
+  --glass: rgba(255,255,255,0.035);
+  --glass-border: rgba(245,158,11,0.12);
+  --text: #DDE3EE;
+  --text-muted: #6B7A94;
+  --white: #ffffff;
+  --success: #10B981;
+  --danger: #EF4444;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--navy);color:var(--text);font-family:'Syne',sans-serif;overflow-x:hidden;cursor:none;}
+
+.cur{width:10px;height:10px;background:var(--gold);border-radius:50%;position:fixed;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width 0.2s,height 0.2s;}
+.cur-ring{width:38px;height:38px;border:1px solid rgba(245,158,11,0.35);border-radius:50%;position:fixed;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:all 0.3s;}
+body:has(a:hover) .cur,body:has(button:hover) .cur{width:16px;height:16px;}
+body:has(a:hover) .cur-ring,body:has(button:hover) .cur-ring{width:52px;height:52px;border-color:rgba(245,158,11,0.6);}
+
+.lang-toggle{position:fixed;top:1.4rem;right:6rem;z-index:2000;display:flex;}
+.lang-btn{background:none;border:1px solid rgba(245,158,11,0.2);color:var(--text-muted);padding:0.35rem 0.7rem;font-family:'Syne',sans-serif;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;cursor:none;transition:all 0.25s;}
+.lang-btn.active{background:var(--gold);border-color:var(--gold);color:var(--navy);font-weight:700;}
+.lang-btn:first-child{border-right:none;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:1.3rem 3.5rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(4,8,15,0.97) 0%,transparent 100%);backdrop-filter:blur(12px);border-bottom:1px solid rgba(245,158,11,0.06);}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.55rem;letter-spacing:0.12em;color:var(--white);}
+.nav-logo span{color:var(--gold);}
+.nav-logo small{font-family:'Syne',sans-serif;font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);display:block;margin-top:-4px;}
+.nav-links{display:flex;gap:2.2rem;list-style:none;}
+.nav-links a{color:var(--text-muted);text-decoration:none;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.25s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-right{display:flex;align-items:center;gap:1.2rem;}
+.btn-nav{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:0.55rem 1.3rem;font-family:'Syne',sans-serif;font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;cursor:none;transition:all 0.25s;}
+.btn-nav:hover{background:var(--gold);color:var(--navy);}
+
+.social-links{display:flex;gap:0.6rem;align-items:center;}
+.social-link{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid rgba(245,158,11,0.15);color:var(--text-muted);text-decoration:none;transition:all 0.25s;cursor:none;}
+.social-link:hover{border-color:var(--gold);color:var(--gold);background:rgba(245,158,11,0.06);}
+.social-link svg{width:15px;height:15px;fill:currentColor;}
+
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:0 3.5rem;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 55% 50%,rgba(13,26,50,0.85) 0%,transparent 70%),radial-gradient(ellipse 35% 45% at 85% 15%,rgba(245,158,11,0.05) 0%,transparent 60%),linear-gradient(140deg,#04080F 0%,#060D1A 50%,#04080F 100%);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(245,158,11,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(245,158,11,0.025) 1px,transparent 1px);background-size:55px 55px;animation:gridMove 18s linear infinite;}
+@keyframes gridMove{0%{transform:perspective(500px) rotateX(18deg) translateY(0);}100%{transform:perspective(500px) rotateX(18deg) translateY(55px);}}
+.hero-glow{position:absolute;right:-80px;top:50%;transform:translateY(-50%);width:550px;height:550px;background:radial-gradient(circle,rgba(245,158,11,0.07) 0%,transparent 70%);border-radius:50%;animation:breathe 5s ease-in-out infinite;}
+@keyframes breathe{0%,100%{transform:translateY(-50%) scale(1);}50%{transform:translateY(-50%) scale(1.12);}}
+.hero-content{position:relative;z-index:2;max-width:740px;}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);padding:0.38rem 1rem;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;animation:fadeUp 0.7s ease both;}
+.hero-badge::before{content:'';width:5px;height:5px;background:var(--gold);border-radius:50%;animation:blink 1.8s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
+.hero-headline{font-family:'Playfair Display',serif;font-size:clamp(3.2rem,6.5vw,5.5rem);font-weight:900;line-height:1.03;color:var(--white);margin-bottom:1.4rem;animation:fadeUp 0.7s 0.1s ease both;}
+.hero-headline .accent{color:var(--gold);font-style:italic;}
+.hero-sub{font-size:1rem;color:var(--text-muted);line-height:1.8;max-width:500px;margin-bottom:2.3rem;font-weight:300;animation:fadeUp 0.7s 0.2s ease both;}
+.hero-ctas{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3rem;animation:fadeUp 0.7s 0.3s ease both;}
+.btn-primary{background:var(--gold);color:var(--navy);border:none;padding:0.95rem 2rem;font-family:'Syne',sans-serif;font-weight:700;font-size:0.88rem;letter-spacing:0.06em;cursor:none;transition:all 0.3s;position:relative;overflow:hidden;}
+.btn-primary::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.18);transform:translateX(-100%) skewX(-12deg);transition:transform 0.4s;}
+.btn-primary:hover::after{transform:translateX(100%) skewX(-12deg);}
+.btn-primary:hover{background:var(--gold-light);transform:translateY(-2px);}
+.btn-secondary{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.12);padding:0.95rem 2rem;font-family:'Syne',sans-serif;font-size:0.88rem;cursor:none;transition:all 0.3s;}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold);}
+.trust-bar{display:flex;align-items:center;gap:2rem;animation:fadeUp 0.7s 0.4s ease both;}
+.trust-text{font-size:0.72rem;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;white-space:nowrap;}
+.trust-div{width:1px;height:22px;background:rgba(255,255,255,0.08);}
+.trust-metrics{display:flex;gap:2rem;}
+.metric .val{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--gold);}
+.metric .lbl{font-size:0.65rem;color:var(--text-muted);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+
+.ticker{background:rgba(245,158,11,0.06);border-top:1px solid rgba(245,158,11,0.1);border-bottom:1px solid rgba(245,158,11,0.1);padding:0.7rem 0;overflow:hidden;white-space:nowrap;}
+.ticker-inner{display:inline-flex;animation:tick 28s linear infinite;}
+.ticker-item{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);padding:0 2.5rem;}
+.ticker-item span{color:var(--gold);margin-right:0.4rem;}
+@keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+section{padding:6.5rem 3.5rem;position:relative;}
+.sec-label{font-size:0.68rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.9rem;display:flex;align-items:center;gap:0.7rem;}
+.sec-label::before{content:'';width:28px;height:1px;background:var(--gold);}
+.sec-headline{font-family:'Playfair Display',serif;font-size:clamp(2rem,3.8vw,3.2rem);font-weight:900;line-height:1.1;color:var(--white);margin-bottom:1.3rem;}
+.center-header{text-align:center;}
+.center-header .sec-label{justify-content:center;}
+.center-header .sec-label::before{display:none;}
+.gold-bar{width:50px;height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin:1.2rem 0;}
+.reveal{opacity:0;transform:translateY(35px);transition:opacity 0.75s ease,transform 0.75s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:0.1s;}.d2{transition-delay:0.2s;}.d3{transition-delay:0.3s;}
+
+.problem{background:linear-gradient(180deg,var(--navy) 0%,var(--navy-mid) 100%);}
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
+.problem-body{font-size:0.95rem;line-height:1.85;color:var(--text-muted);margin-bottom:1.2rem;font-weight:300;}
+.pcards{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.pcard{background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(10px);padding:1.4rem;transition:all 0.3s;position:relative;overflow:hidden;}
+.pcard:hover{transform:translateY(-4px);border-color:rgba(245,158,11,0.3);}
+.pcard::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity 0.3s;}
+.pcard:hover::before{opacity:1;}
+.pcard-icon{font-size:1.4rem;margin-bottom:0.6rem;}
+.pcard h4{font-size:0.85rem;font-weight:600;color:var(--white);margin-bottom:0.35rem;}
+.pcard p{font-size:0.78rem;color:var(--text-muted);line-height:1.55;}
+
+.solution{background:linear-gradient(135deg,var(--navy-mid) 0%,#0A1428 100%);}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.3rem;counter-reset:s;}
+.step{background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(15px);padding:1.8rem 1.4rem;position:relative;transition:all 0.35s;counter-increment:s;}
+.step::before{content:counter(s,decimal-leading-zero);font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:rgba(245,158,11,0.1);position:absolute;top:0.8rem;right:1rem;line-height:1;}
+.step:hover{background:rgba(245,158,11,0.04);border-color:rgba(245,158,11,0.28);transform:translateY(-5px);}
+.step-ico{width:40px;height:40px;background:rgba(245,158,11,0.09);border:1px solid rgba(245,158,11,0.18);display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:1rem;}
+.step h3{font-size:0.9rem;font-weight:600;color:var(--white);margin-bottom:0.5rem;}
+.step p{font-size:0.78rem;color:var(--text-muted);line-height:1.6;}
+
+.services{background:var(--navy);}
+.svc-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;}
+.svc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.3rem;}
+.svc-card{background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(15px);padding:2.2rem;transition:all 0.4s;position:relative;overflow:hidden;cursor:none;}
+.svc-card:first-child{grid-column:span 2;}
+.svc-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,158,11,0.04) 0%,transparent 60%);opacity:0;transition:opacity 0.4s;}
+.svc-card:hover::after{opacity:1;}
+.svc-card:hover{border-color:rgba(245,158,11,0.3);transform:translateY(-4px);}
+.svc-num{font-size:0.68rem;letter-spacing:0.18em;color:var(--gold);text-transform:uppercase;margin-bottom:0.8rem;}
+.svc-card h3{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:700;color:var(--white);margin-bottom:0.6rem;line-height:1.2;}
+.svc-card p{font-size:0.85rem;color:var(--text-muted);line-height:1.7;max-width:460px;}
+.svc-tags{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.3rem;}
+.tag{font-size:0.68rem;letter-spacing:0.07em;color:var(--gold);background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.14);padding:0.28rem 0.7rem;}
+.svc-arr{position:absolute;right:2.2rem;bottom:2.2rem;width:32px;height:32px;border:1px solid rgba(245,158,11,0.18);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:0.9rem;transition:all 0.3s;}
+.svc-card:hover .svc-arr{background:var(--gold);color:var(--navy);border-color:var(--gold);}
+
+/* PRICING */
+.pricing{background:linear-gradient(135deg,var(--navy-mid) 0%,var(--navy) 100%);}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;margin-bottom:2rem;}
+.price-card{background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(15px);padding:2.2rem;position:relative;transition:all 0.4s;display:flex;flex-direction:column;}
+.price-card:hover{transform:translateY(-6px);border-color:rgba(245,158,11,0.3);}
+.price-card.featured{border-color:rgba(245,158,11,0.35);background:rgba(245,158,11,0.03);}
+.price-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--navy);font-size:0.62rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:0.25rem 1rem;white-space:nowrap;}
+.price-tier{font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.7rem;}
+.price-card h3{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--white);margin-bottom:0.5rem;}
+.price-desc{font-size:0.8rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.3rem;}
+.price-amount{display:flex;align-items:baseline;gap:0.35rem;margin-bottom:0.25rem;}
+.price-from{font-size:0.68rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;}
+.price-num{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;color:var(--gold);line-height:1;}
+.price-note{font-size:0.7rem;color:var(--text-muted);margin-bottom:1.3rem;font-style:italic;}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:0.55rem;margin-bottom:1.6rem;flex:1;}
+.price-features li{display:flex;align-items:flex-start;gap:0.6rem;font-size:0.8rem;color:var(--text-muted);line-height:1.5;}
+.price-features li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0;}
+.price-cta{background:transparent;border:1px solid rgba(245,158,11,0.28);color:var(--gold);padding:0.8rem;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:600;cursor:none;transition:all 0.3s;letter-spacing:0.04em;text-align:center;}
+.price-card.featured .price-cta{background:var(--gold);color:var(--navy);border-color:var(--gold);}
+.price-cta:hover{background:var(--gold);color:var(--navy);border-color:var(--gold);}
+.pricing-addons{background:var(--glass);border:1px solid var(--glass-border);padding:2rem;}
+.addons-title{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+.addons-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;}
+.addon{display:flex;flex-direction:column;gap:0.25rem;}
+.addon-name{font-size:0.82rem;color:var(--white);font-weight:500;}
+.addon-price{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--gold);}
+.addon-desc{font-size:0.72rem;color:var(--text-muted);line-height:1.4;}
+
+.cases{background:var(--navy);}
+.cases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;}
+.case-card{background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(15px);overflow:hidden;transition:all 0.4s;cursor:none;}
+.case-card:hover{border-color:rgba(245,158,11,0.28);transform:translateY(-5px);}
+.case-head{padding:1.8rem;background:linear-gradient(135deg,rgba(245,158,11,0.07) 0%,transparent 100%);border-bottom:1px solid var(--glass-border);}
+.case-ind{font-size:0.66rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;}
+.case-card h3{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--white);margin-bottom:0.2rem;}
+.case-type{font-size:0.74rem;color:var(--text-muted);}
+.case-body{padding:1.8rem;}
+.case-sec{margin-bottom:1rem;}
+.case-sec-lbl{font-size:0.64rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.35rem;}
+.case-sec p{font-size:0.8rem;color:var(--text-muted);line-height:1.6;}
+.case-metrics{display:flex;gap:0.8rem;margin-top:1.4rem;padding-top:1.4rem;border-top:1px solid rgba(255,255,255,0.05);}
+.cm{flex:1;text-align:center;}
+.cm-val{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:700;color:var(--gold);}
+.cm-lbl{font-size:0.63rem;color:var(--text-muted);}
+
+/* AUTHORITY */
+.authority{background:linear-gradient(180deg,var(--navy-mid) 0%,var(--navy) 100%);}
+.auth-inner{display:grid;grid-template-columns:1fr 1.5fr;gap:5.5rem;align-items:center;max-width:960px;margin:0 auto;}
+.avatar-wrap{position:relative;}
+.avatar-container{width:100%;aspect-ratio:3/4;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(135deg,var(--navy-light) 0%,#0B1830 100%);border:1px solid var(--glass-border);}
+.avatar-container::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(245,158,11,0.07) 0%,transparent 60%);}
+.avatar-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;}
+.avatar-ring1{position:absolute;width:200px;height:200px;border:1px solid rgba(245,158,11,0.1);border-radius:50%;animation:spin-slow 20s linear infinite;}
+.avatar-ring2{position:absolute;width:240px;height:240px;border:1px solid rgba(245,158,11,0.05);border-radius:50%;animation:spin-slow 30s linear infinite reverse;}
+@keyframes spin-slow{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.avatar-glow-bottom{position:absolute;bottom:0;left:0;right:0;height:35%;background:linear-gradient(0deg,rgba(245,158,11,0.05) 0%,transparent 100%);}
+.avatar-badge{position:absolute;bottom:-0.8rem;right:-0.8rem;background:var(--gold);color:var(--navy);padding:0.8rem 1rem;font-weight:700;font-size:0.75rem;text-align:center;line-height:1.5;}
+.avatar-badge strong{font-size:1.4rem;display:block;font-family:'Playfair Display',serif;}
+.auth-name{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--white);line-height:1.1;margin-bottom:0.25rem;}
+.auth-title{font-size:0.8rem;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1.4rem;}
+.auth-bio{font-size:0.9rem;color:var(--text-muted);line-height:1.85;margin-bottom:1.2rem;font-weight:300;}
+.auth-tags{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.5rem;}
+.auth-tag{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.14);padding:0.3rem 0.75rem;font-size:0.7rem;color:var(--gold);}
+.auth-social{display:flex;gap:0.7rem;margin-bottom:1.8rem;}
+.auth-social-link{display:flex;align-items:center;gap:0.5rem;padding:0.55rem 1rem;border:1px solid rgba(245,158,11,0.15);color:var(--text-muted);text-decoration:none;font-size:0.75rem;letter-spacing:0.05em;transition:all 0.25s;cursor:none;}
+.auth-social-link:hover{border-color:var(--gold);color:var(--gold);background:rgba(245,158,11,0.05);}
+.auth-social-link svg{width:14px;height:14px;fill:currentColor;flex-shrink:0;}
+
+/* TESTIMONIALS */
+.testimonials{background:var(--navy);}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;}
+.testi{background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(15px);padding:1.8rem;transition:all 0.3s;position:relative;overflow:hidden;}
+.testi:hover{border-color:rgba(245,158,11,0.22);transform:translateY(-4px);}
+.testi::before{content:'"';position:absolute;top:-0.5rem;left:1.2rem;font-family:'Playfair Display',serif;font-size:6rem;color:rgba(245,158,11,0.05);line-height:1;pointer-events:none;}
+.testi-stars{color:var(--gold);font-size:0.76rem;margin-bottom:0.9rem;letter-spacing:0.08em;}
+.testi-quote{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--text);line-height:1.7;margin-bottom:1.2rem;font-style:italic;position:relative;z-index:1;}
+.testi-industry{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.12);padding:0.25rem 0.65rem;}
+
+/* CONTACT */
+.contact-section{background:linear-gradient(135deg,#060D1F 0%,var(--navy-mid) 100%);padding:6.5rem 3.5rem;position:relative;}
+.contact-section::before{content:'';position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:560px;height:560px;background:radial-gradient(circle,rgba(245,158,11,0.05) 0%,transparent 70%);pointer-events:none;}
+.contact-inner{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;max-width:1000px;margin:0 auto;}
+.contact-sub{font-size:0.92rem;color:var(--text-muted);line-height:1.8;margin-bottom:2rem;font-weight:300;}
+.cd-rows{display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem;}
+.cd-row{display:flex;align-items:center;gap:0.75rem;}
+.cd-icon{width:32px;height:32px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.15);display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;}
+.cd-lbl{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);}
+.cd-val{font-size:0.85rem;color:var(--text);}
+.contact-social{display:flex;gap:0.7rem;margin-top:1.5rem;}
+.contact-social-link{display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.9rem;border:1px solid rgba(245,158,11,0.15);color:var(--text-muted);text-decoration:none;font-size:0.72rem;transition:all 0.25s;cursor:none;}
+.contact-social-link:hover{border-color:var(--gold);color:var(--gold);}
+.contact-social-link svg{width:13px;height:13px;fill:currentColor;}
+
+.contact-form{background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(15px);padding:2rem;}
+.form-title{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1.3rem;padding-bottom:0.7rem;border-bottom:1px solid rgba(245,158,11,0.1);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;}
+.fg{display:flex;flex-direction:column;gap:0.35rem;margin-bottom:0.8rem;}
+.fg label{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);}
+.fg input,.fg select,.fg textarea{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);color:var(--text);padding:0.7rem 0.85rem;font-family:'Syne',sans-serif;font-size:0.84rem;outline:none;transition:border 0.25s;width:100%;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);}
+.fg select option{background:var(--navy-mid);}
+.fg textarea{resize:vertical;min-height:90px;line-height:1.6;}
+.form-submit{width:100%;background:var(--gold);color:var(--navy);border:none;padding:0.95rem;font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.05em;cursor:none;transition:all 0.3s;margin-top:0.3rem;}
+.form-submit:hover{background:var(--gold-light);}
+.form-submit:disabled{opacity:0.6;}
+.form-msg{padding:0.75rem;font-size:0.8rem;text-align:center;margin-top:0.8rem;display:none;}
+.form-msg.ok{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);color:var(--success);}
+.form-msg.err{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:var(--danger);}
+
+footer{background:var(--navy);border-top:1px solid rgba(245,158,11,0.07);padding:1.8rem 3.5rem;}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;}
+.foot-logo{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;color:var(--white);letter-spacing:0.1em;}
+.foot-logo span{color:var(--gold);}
+.foot-center{display:flex;flex-direction:column;align-items:center;gap:0.5rem;}
+.foot-social{display:flex;gap:0.5rem;}
+.foot-slink{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border:1px solid rgba(245,158,11,0.12);color:var(--text-muted);text-decoration:none;transition:all 0.25s;cursor:none;}
+.foot-slink:hover{border-color:var(--gold);color:var(--gold);}
+.foot-slink svg{width:13px;height:13px;fill:currentColor;}
+.foot-text{font-size:0.7rem;color:var(--text-muted);}
+.foot-links{display:flex;gap:1.8rem;list-style:none;}
+.foot-links a{font-size:0.74rem;color:var(--text-muted);text-decoration:none;transition:color 0.25s;cursor:none;}
+.foot-links a:hover{color:var(--gold);}
+
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem;}
+  .nav-links,.social-links{display:none;}
+  section,.contact-section{padding:4.5rem 1.5rem;}
+  .hero{padding:0 1.5rem;}
+  .hero-headline{font-size:2.8rem;}
+  .problem-grid,.steps,.svc-grid,.cases-grid,.testi-grid,.auth-inner,.contact-inner,.pricing-grid,.addons-grid{grid-template-columns:1fr;}
+  .svc-card:first-child{grid-column:span 1;}
+  .form-row{grid-template-columns:1fr;}
+  footer{padding:1.5rem;}
+  .footer-inner{flex-direction:column;gap:1.2rem;text-align:center;}
+  body{cursor:auto;}
+  .cur,.cur-ring{display:none;}
+  .lang-toggle{right:1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="curRing"></div>
+
+<!-- LANG -->
+<div class="lang-toggle">
+  <button class="lang-btn active" onclick="setLang('fr')" id="btn-fr">FR</button>
+  <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Tou<span>Dev</span><small data-fr="Partenaire Numérique · Québec" data-en="Digital Partner · Québec">Partenaire Numérique · Québec</small></div>
+  <ul class="nav-links">
+    <li><a href="#problem" data-fr="Le Problème" data-en="The Problem">Le Problème</a></li>
+    <li><a href="#services" data-fr="Services" data-en="Services">Services</a></li>
+    <li><a href="#pricing" data-fr="Tarifs" data-en="Pricing">Tarifs</a></li>
+    <li><a href="#cases" data-fr="Projets" data-en="Projects">Projets</a></li>
+    <li><a href="#contact" data-fr="Contact" data-en="Contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="social-links">
+      <a class="social-link s-github" href="#" target="_blank" rel="noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
+      <a class="social-link s-instagram" href="#" target="_blank" rel="noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+    </div>
+    <button class="btn-nav" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" data-fr="Réserver un appel" data-en="Book a Call">Réserver un appel</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div><div class="hero-grid"></div><div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-badge" data-fr="Partenaire de Croissance Numérique · Québec, Canada" data-en="Digital Growth Partner · Québec, Canada">Partenaire de Croissance Numérique · Québec, Canada</div>
+    <h1 class="hero-headline"><span data-fr="On Bâtit des Systèmes<br><span class='accent'>Qui Génèrent</span><br>des Revenus." data-en="We Build Systems<br><span class='accent'>That Generate</span><br>Revenue.">On Bâtit des Systèmes<br><span class="accent">Qui Génèrent</span><br>des Revenus.</span></h1>
+    <p class="hero-sub" data-fr="Sites web haute-performance & systèmes backend conçus pour transformer vos visiteurs en clients payants — pour les entreprises ambitieuses du Québec." data-en="High-performance websites & backend systems designed to turn visitors into paying customers — for ambitious businesses across Québec.">Sites web haute-performance & systèmes backend conçus pour transformer vos visiteurs en clients payants.</p>
+    <div class="hero-ctas">
+      <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" data-fr="Réserver un appel stratégique →" data-en="Book a Strategy Call →">Réserver un appel stratégique →</button>
+      <button class="btn-secondary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})" data-fr="Voir les tarifs" data-en="View Pricing">Voir les tarifs</button>
+    </div>
+    <div class="trust-bar">
+      <span class="trust-text" data-fr="Fait confiance par des entreprises en croissance" data-en="Trusted by growing businesses">Fait confiance par des entreprises en croissance</span>
+      <div class="trust-div"></div>
+      <div class="trust-metrics">
+        <div class="metric"><div class="val">+40%</div><div class="lbl" data-fr="Conversion moyenne" data-en="Avg. conversion">Conversion moyenne</div></div>
+        <div class="metric"><div class="val">3×</div><div class="lbl" data-fr="Retour sur invest." data-en="ROI">Retour sur invest.</div></div>
+        <div class="metric"><div class="val">24h</div><div class="lbl" data-fr="Délai de réponse" data-en="Response time">Délai de réponse</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker"><div class="ticker-inner">
+  <span class="ticker-item"><span>✦</span><span data-fr="Garages Automobiles" data-en="Auto Garages">Garages Automobiles</span></span>
+  <span class="ticker-item"><span>✦</span><span data-fr="Restaurants & Traiteurs" data-en="Restaurants & Caterers">Restaurants & Traiteurs</span></span>
+  <span class="ticker-item"><span>✦</span><span data-fr="Cliniques & Santé" data-en="Clinics & Health">Cliniques & Santé</span></span>
+  <span class="ticker-item"><span>✦</span><span data-fr="Entrepreneurs & Métiers" data-en="Contractors & Trades">Entrepreneurs & Métiers</span></span>
+  <span class="ticker-item"><span>✦</span><span data-fr="Services Professionnels" data-en="Professional Services">Services Professionnels</span></span>
+  <span class="ticker-item"><span>✦</span><span data-fr="Commerce en Ligne" data-en="E-Commerce">Commerce en Ligne</span></span>
+  <span class="ticker-item"><span>✦</span><span data-fr="Garages Automobiles" data-en="Auto Garages">Garages Automobiles</span></span>
+  <span class="ticker-item"><span>✦</span><span data-fr="Restaurants & Traiteurs" data-en="Restaurants & Caterers">Restaurants & Traiteurs</span></span>
+  <span class="ticker-item"><span>✦</span><span data-fr="Cliniques & Santé" data-en="Clinics & Health">Cliniques & Santé</span></span>
+  <span class="ticker-item"><span>✦</span><span data-fr="Entrepreneurs & Métiers" data-en="Contractors & Trades">Entrepreneurs & Métiers</span></span>
+  <span class="ticker-item"><span>✦</span><span data-fr="Services Professionnels" data-en="Professional Services">Services Professionnels</span></span>
+  <span class="ticker-item"><span>✦</span><span data-fr="Commerce en Ligne" data-en="E-Commerce">Commerce en Ligne</span></span>
+</div></div>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="problem-grid">
+    <div class="reveal">
+      <div class="sec-label" data-fr="La Réalité" data-en="The Reality">La Réalité</div>
+      <h2 class="sec-headline"><span data-fr="La plupart des sites web <span style='color:var(--gold);font-style:italic'>font fuir</span> vos clients." data-en="Most websites <span style='color:var(--gold);font-style:italic'>drive away</span> your customers.">La plupart des sites web <span style="color:var(--gold);font-style:italic">font fuir</span> vos clients.</span></h2>
+      <div class="gold-bar"></div>
+      <p class="problem-body" data-fr="Vous avez investi dans un site web. Mais s'il ne génère pas de leads qualifiés chaque semaine — il vous coûte de l'argent. La majorité des sites échouent parce qu'ils sont construits par des graphistes, pas par des partenaires qui comprennent la conversion." data-en="You invested in a website. But if it's not generating qualified leads every week — it's costing you money. Most sites fail because they're built by designers, not growth partners who understand conversion.">Vous avez investi dans un site web. Mais s'il ne génère pas de leads qualifiés chaque semaine — il vous coûte de l'argent.</p>
+      <p class="problem-body" data-fr="Un beau site sans stratégie de conversion n'est pas un actif. C'est un passif. Pendant ce temps, vos concurrents captent exactement les clients qui devraient vous appeler." data-en="A beautiful site without a conversion strategy isn't an asset. It's a liability. Meanwhile your competitors are capturing the clients who should be calling you.">Un beau site sans stratégie de conversion n'est pas un actif. C'est un passif.</p>
+    </div>
+    <div class="pcards reveal d2">
+      <div class="pcard"><div class="pcard-icon">📉</div><h4 data-fr="Aucune stratégie de conversion" data-en="No conversion strategy">Aucune stratégie de conversion</h4><p data-fr="Fait pour être beau, pas pour vendre. Aucun entonnoir, aucune logique de revenus." data-en="Built to look good, not to sell. No funnel, no revenue logic.">Fait pour être beau, pas pour vendre.</p></div>
+      <div class="pcard"><div class="pcard-icon">🐌</div><h4 data-fr="Temps de chargement lent" data-en="Slow load times">Temps de chargement lent</h4><p data-fr="53% des visiteurs mobiles quittent après 3 secondes. Vitesse = revenus." data-en="53% of mobile visitors leave after 3 seconds. Speed = revenue.">53% des visiteurs quittent après 3 secondes.</p></div>
+      <div class="pcard"><div class="pcard-icon">🔍</div><h4 data-fr="Invisible sur Google" data-en="Invisible on Google">Invisible sur Google</h4><p data-fr="Sans structure SEO, vos clients idéaux ne vous trouvent tout simplement pas." data-en="Without SEO structure, your ideal clients simply can't find you.">Sans SEO, vos clients idéaux ne vous trouvent pas.</p></div>
+      <div class="pcard"><div class="pcard-icon">🔒</div><h4 data-fr="Aucune automatisation" data-en="No automation">Aucune automatisation</h4><p data-fr="Réservations manuelles, appels manqués, zéro suivi. Des revenus perdus chaque jour." data-en="Manual bookings, missed calls, no follow-ups. Revenue lost every day.">Réservations manuelles, appels manqués, revenus perdus.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="solution" id="solution">
+  <div class="center-header reveal" style="margin-bottom:3.5rem;">
+    <div class="sec-label" data-fr="Notre Approche" data-en="Our Approach">Notre Approche</div>
+    <h2 class="sec-headline" data-fr="La stratégie d'abord. Le code ensuite." data-en="Strategy first. Code second.">La stratégie d'abord. Le code ensuite.</h2>
+    <p style="color:var(--text-muted);max-width:520px;margin:0.8rem auto 0;font-size:0.9rem;line-height:1.75;font-weight:300;" data-fr="Chaque projet commence par une compréhension profonde de votre entreprise, vos clients et votre marché." data-en="Every project starts with a deep understanding of your business, your customers, and your market.">Chaque projet commence par une compréhension profonde de votre entreprise, vos clients et votre marché.</p>
+  </div>
+  <div class="steps">
+    <div class="step reveal"><div class="step-ico">🎯</div><h3 data-fr="Stratégie Avant Tout" data-en="Strategy First">Stratégie Avant Tout</h3><p data-fr="On analyse votre marché, vos concurrents et votre parcours client avant d'écrire une seule ligne de code." data-en="We analyze your market, competitors, and customer journey before writing a single line of code.">On analyse votre marché et vos concurrents avant d'écrire la moindre ligne de code.</p></div>
+    <div class="step reveal d1"><div class="step-ico">🧠</div><h3 data-fr="UX Axé Conversion" data-en="Conversion UX">UX Axé Conversion</h3><p data-fr="Chaque élément est placé délibérément pour guider le visiteur à devenir client." data-en="Every element is deliberately placed to guide visitors into becoming customers.">Chaque élément est placé pour guider le visiteur à devenir client.</p></div>
+    <div class="step reveal d2"><div class="step-ico">🔐</div><h3 data-fr="Backend Sécurisé" data-en="Secure Backend">Backend Sécurisé</h3><p data-fr="Sécurité de niveau entreprise, données chiffrées et architecture robuste." data-en="Enterprise-level security, encrypted data, and robust architecture.">Sécurité entreprise, données chiffrées, architecture robuste.</p></div>
+    <div class="step reveal d3"><div class="step-ico">📈</div><h3 data-fr="Architecture Évolutive" data-en="Scalable Architecture">Architecture Évolutive</h3><p data-fr="Construit pour grandir avec vous. De 100 à 100 000 visiteurs, sans reconstruction." data-en="Built to grow with you. From 100 to 100,000 visitors, no rebuilds.">De 100 à 100 000 visiteurs, sans reconstruction ni dette technique.</p></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="svc-header">
+    <div class="reveal">
+      <div class="sec-label" data-fr="Ce Qu'on Bâtit" data-en="What We Build">Ce Qu'on Bâtit</div>
+      <h2 class="sec-headline" data-fr="Des systèmes qui se paient eux-mêmes." data-en="Systems that pay for themselves.">Des systèmes qui se paient eux-mêmes.</h2>
+    </div>
+  </div>
+  <div class="svc-grid">
+    <div class="svc-card reveal">
+      <div class="svc-num" data-fr="01 — Service Phare" data-en="01 — Flagship Service">01 — Service Phare</div>
+      <h3 data-fr="Sites Web Haute-Performance" data-en="High-Converting Business Websites">Sites Web Haute-Performance</h3>
+      <p data-fr="Pas une brochure. Une machine à revenus. Sites full-stack architecturés autour de votre entonnoir de vente — design mobile-first, copie persuasive, SEO local optimisé pour le Québec." data-en="Not a brochure. A revenue machine. Full-stack sites architected around your sales funnel — mobile-first design, persuasive copy, local SEO for Québec.">Pas une brochure. Une machine à revenus. Sites full-stack architecturés autour de votre entonnoir de vente.</p>
+      <div class="svc-tags"><span class="tag">Génération de leads</span><span class="tag">SEO Local QC</span><span class="tag">Mobile-First</span><span class="tag">CRM</span></div>
+      <div class="svc-arr">→</div>
+    </div>
+    <div class="svc-card reveal">
+      <div class="svc-num">02</div>
+      <h3 data-fr="Développement Backend Sur Mesure" data-en="Custom Backend Development">Développement Backend Sur Mesure</h3>
+      <p data-fr="APIs, bases de données et logique serveur pour votre workflow exact. Automatisez les processus manuels avec des systèmes fiables et évolutifs." data-en="APIs, databases, and server logic for your exact workflow. Automate manual processes with reliable, scalable systems.">APIs, bases de données et logique serveur construits pour votre workflow exact.</p>
+      <div class="svc-tags"><span class="tag">REST APIs</span><span class="tag">PostgreSQL</span><span class="tag">Cloud</span></div>
+      <div class="svc-arr">→</div>
+    </div>
+    <div class="svc-card reveal d1">
+      <div class="svc-num">03</div>
+      <h3 data-fr="Systèmes de Réservation & Auto." data-en="Booking & Automation Systems">Systèmes de Réservation & Auto.</h3>
+      <p data-fr="Portails de réservation en ligne, rappels automatiques et paiements intégrés — conçus pour votre entreprise de services." data-en="Online booking portals, automated reminders, and integrated payments — designed for your service business.">Portails de réservation, rappels automatiques et paiements intégrés.</p>
+      <div class="svc-tags"><span class="tag">Réservation en ligne</span><span class="tag">Automatisation</span><span class="tag">Stripe</span></div>
+      <div class="svc-arr">→</div>
+    </div>
+    <div class="svc-card reveal d2">
+      <div class="svc-num">04</div>
+      <h3 data-fr="Optimisation des Performances" data-en="Performance Optimization">Optimisation des Performances</h3>
+      <p data-fr="On audite, optimise et reconstruit où nécessaire. Core Web Vitals, vitesse de page — chargement sous 2 secondes garanti." data-en="We audit, optimize, and rebuild where needed. Core Web Vitals, page speed — under 2 seconds guaranteed.">Audit complet, Core Web Vitals, chargement sous 2 secondes.</p>
+      <div class="svc-tags"><span class="tag">Core Web Vitals</span><span class="tag">CDN</span><span class="tag">Audit</span></div>
+      <div class="svc-arr">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="center-header reveal" style="margin-bottom:3.5rem;">
+    <div class="sec-label" data-fr="Tarifs Transparents" data-en="Transparent Pricing">Tarifs Transparents</div>
+    <h2 class="sec-headline" data-fr="Un investissement, pas une dépense." data-en="An investment, not an expense.">Un investissement, pas une dépense.</h2>
+    <p style="color:var(--text-muted);max-width:460px;margin:0.8rem auto 0;font-size:0.88rem;line-height:1.75;font-weight:300;" data-fr="Des prix honnêtes pour un travail sérieux. Chaque projet est discuté avant de commencer — aucune surprise." data-en="Honest prices for serious work. Every project is discussed before we start — no surprises.">Des prix honnêtes pour un travail sérieux. Chaque projet est discuté avant de commencer.</p>
+  </div>
+
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="price-tier" data-fr="Démarrage" data-en="Starter">Démarrage</div>
+      <h3 data-fr="Site Vitrine" data-en="Business Website">Site Vitrine</h3>
+      <p class="price-desc" data-fr="Pour les entreprises qui veulent une présence professionnelle qui convertit les visiteurs en clients." data-en="For businesses that want a professional presence that converts visitors into clients.">Pour les entreprises qui veulent une présence professionnelle qui convertit.</p>
+      <div class="price-amount"><span class="price-from" data-fr="à partir de" data-en="starting at">à partir de</span><span class="price-num">$800</span></div>
+      <div class="price-note" data-fr="Projet unique · Livraison 2–3 semaines" data-en="One-time · Delivery 2–3 weeks">Projet unique · Livraison 2–3 semaines</div>
+      <ul class="price-features">
+        <li data-fr="Jusqu'à 5 pages" data-en="Up to 5 pages">Jusqu'à 5 pages</li>
+        <li data-fr="Design mobile-first personnalisé" data-en="Custom mobile-first design">Design mobile-first personnalisé</li>
+        <li data-fr="Formulaire de contact" data-en="Contact form">Formulaire de contact</li>
+        <li data-fr="SEO de base (Google My Business)" data-en="Basic SEO (Google My Business)">SEO de base + Google My Business</li>
+        <li data-fr="1 révision incluse" data-en="1 revision included">1 révision incluse</li>
+      </ul>
+      <button class="price-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" data-fr="Démarrer ce projet" data-en="Start this project">Démarrer ce projet</button>
+    </div>
+
+    <div class="price-card featured reveal d1">
+      <div class="price-badge" data-fr="Le plus populaire" data-en="Most popular">Le plus populaire</div>
+      <div class="price-tier" data-fr="Croissance" data-en="Growth">Croissance</div>
+      <h3 data-fr="Site + Système Backend" data-en="Site + Backend System">Site + Système Backend</h3>
+      <p class="price-desc" data-fr="Pour les entreprises prêtes à automatiser leurs opérations et scaler leur acquisition de clients." data-en="For businesses ready to automate their operations and scale client acquisition.">Pour les entreprises prêtes à automatiser et à scaler leur acquisition de clients.</p>
+      <div class="price-amount"><span class="price-from" data-fr="à partir de" data-en="starting at">à partir de</span><span class="price-num">$2 000</span></div>
+      <div class="price-note" data-fr="Projet unique · Livraison 3–5 semaines" data-en="One-time · Delivery 3–5 weeks">Projet unique · Livraison 3–5 semaines</div>
+      <ul class="price-features">
+        <li data-fr="Tout du forfait Démarrage" data-en="Everything in Starter">Tout du forfait Démarrage</li>
+        <li data-fr="Backend + base de données" data-en="Backend + database">Backend + base de données</li>
+        <li data-fr="Système de réservation en ligne" data-en="Online booking system">Système de réservation en ligne</li>
+        <li data-fr="Intégration paiement Stripe" data-en="Stripe payment integration">Intégration paiement Stripe</li>
+        <li data-fr="SEO local avancé" data-en="Advanced local SEO">SEO local avancé</li>
+        <li data-fr="3 révisions incluses" data-en="3 revisions included">3 révisions incluses</li>
+      </ul>
+      <button class="price-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" data-fr="Démarrer ce projet" data-en="Start this project">Démarrer ce projet</button>
+    </div>
+
+    <div class="price-card reveal d2">
+      <div class="price-tier" data-fr="Sur Mesure" data-en="Custom">Sur Mesure</div>
+      <h3 data-fr="Projet Complexe" data-en="Complex Project">Projet Complexe</h3>
+      <p class="price-desc" data-fr="Pour les projets ambitieux qui nécessitent une architecture technique complète et entièrement personnalisée." data-en="For ambitious projects requiring a complete, fully custom technical architecture.">Pour les projets ambitieux qui nécessitent une architecture technique complète.</p>
+      <div class="price-amount"><span class="price-from" data-fr="à partir de" data-en="starting at">à partir de</span><span class="price-num">$4 000</span></div>
+      <div class="price-note" data-fr="Sur devis · Délai selon la portée" data-en="Custom quote · Timeline based on scope">Sur devis · Délai selon la portée</div>
+      <ul class="price-features">
+        <li data-fr="Architecture complète sur mesure" data-en="Full custom architecture">Architecture complète sur mesure</li>
+        <li data-fr="APIs complexes & intégrations" data-en="Complex APIs & integrations">APIs complexes & intégrations</li>
+        <li data-fr="Dashboard admin personnalisé" data-en="Custom admin dashboard">Dashboard admin personnalisé</li>
+        <li data-fr="Support prioritaire inclus" data-en="Priority support included">Support prioritaire inclus</li>
+        <li data-fr="Révisions illimitées" data-en="Unlimited revisions">Révisions illimitées</li>
+      </ul>
+      <button class="price-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" data-fr="Discuter de mon projet" data-en="Discuss my project">Discuter de mon projet</button>
+    </div>
+  </div>
+
+  <div class="pricing-addons reveal">
+    <div class="addons-title" data-fr="ADD-ONS — À PARTIR DE" data-en="ADD-ONS — STARTING AT">ADD-ONS — À PARTIR DE</div>
+    <div class="addons-grid">
+      <div class="addon"><div class="addon-name" data-fr="Maintenance mensuelle" data-en="Monthly maintenance">Maintenance mensuelle</div><div class="addon-price">$99<span style="font-size:0.75rem;font-family:'Syne',sans-serif;font-weight:400;color:var(--text-muted)">/mois</span></div><div class="addon-desc" data-fr="Mises à jour, backups & monitoring" data-en="Updates, backups & monitoring">Mises à jour, backups & monitoring</div></div>
+      <div class="addon"><div class="addon-name" data-fr="Optimisation performance" data-en="Performance audit">Optimisation performance</div><div class="addon-price">$300</div><div class="addon-desc" data-fr="Audit complet + Core Web Vitals" data-en="Full audit + Core Web Vitals">Audit complet + Core Web Vitals</div></div>
+      <div class="addon"><div class="addon-name" data-fr="Intégration API tierce" data-en="3rd-party API integration">Intégration API tierce</div><div class="addon-price">$400</div><div class="addon-desc" data-fr="Stripe, Calendly, CRM, etc." data-en="Stripe, Calendly, CRM, etc.">Stripe, Calendly, CRM, etc.</div></div>
+      <div class="addon"><div class="addon-name" data-fr="Formation propriétaire" data-en="Owner training">Formation propriétaire</div><div class="addon-price">$150</div><div class="addon-desc" data-fr="Session 1h — gérer votre site" data-en="1h session — manage your site">Session 1h pour gérer votre site</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CASES -->
+<section class="cases" id="cases">
+  <div class="center-header reveal" style="margin-bottom:3.5rem;">
+    <div class="sec-label" data-fr="Projets Réalisés" data-en="Case Studies">Projets Réalisés</div>
+    <h2 class="sec-headline" data-fr="Des résultats qui parlent en chiffres." data-en="Results that speak in numbers.">Des résultats qui parlent en chiffres.</h2>
+  </div>
+  <div class="cases-grid">
+    <div class="case-card reveal">
+      <div class="case-head"><div class="case-ind" data-fr="🎬 Divertissement · Québec" data-en="🎬 Entertainment · Québec">🎬 Divertissement · Québec</div><h3>Elite Cinema</h3><div class="case-type" data-fr="Application Web Full-Stack" data-en="Full-Stack Web Application">Application Web Full-Stack</div></div>
+      <div class="case-body">
+        <div class="case-sec"><div class="case-sec-lbl" data-fr="Problème" data-en="Problem">Problème</div><p data-fr="Aucun système de réservation numérique. Réservations manuelles, surréservations et revenus perdus." data-en="No digital booking system. Manual reservations, overbookings, and lost revenue.">Aucun système numérique. Réservations manuelles, surréservations, revenus perdus.</p></div>
+        <div class="case-sec"><div class="case-sec-lbl" data-fr="Solution" data-en="Solution">Solution</div><p data-fr="App full-stack avec sélection de sièges en temps réel, paiements Stripe et tableau de bord admin." data-en="Full-stack app with real-time seat selection, Stripe payments, and admin dashboard.">App full-stack, sièges en temps réel, Stripe, dashboard admin.</p></div>
+        <div class="case-metrics"><div class="cm"><div class="cm-val">+62%</div><div class="cm-lbl" data-fr="Réservations" data-en="Bookings">Réservations</div></div><div class="cm"><div class="cm-val">−80%</div><div class="cm-lbl" data-fr="Appels entrants" data-en="Calls">Appels</div></div><div class="cm"><div class="cm-val">4.9★</div><div class="cm-lbl" data-fr="Satisfaction" data-en="Rating">Satisfaction</div></div></div>
+      </div>
+    </div>
+    <div class="case-card reveal d1">
+      <div class="case-head"><div class="case-ind" data-fr="🔧 Automobile · Québec" data-en="🔧 Automotive · Québec">🔧 Automobile · Québec</div><h3 data-fr="Système Réservation Garage" data-en="Garage Booking System">Système Réservation Garage</h3><div class="case-type" data-fr="Plateforme de Réservation" data-en="Booking Platform">Plateforme de Réservation</div></div>
+      <div class="case-body">
+        <div class="case-sec"><div class="case-sec-lbl" data-fr="Problème" data-en="Problem">Problème</div><p data-fr="30% des rendez-vous perdus — clients appelaient après les heures d'ouverture, tombaient sur la messagerie et allaient chez un concurrent." data-en="30% of appointments lost — customers called after hours, got voicemail, went to a competitor.">30% des rendez-vous perdus après les heures d'ouverture → concurrent.</p></div>
+        <div class="case-sec"><div class="case-sec-lbl" data-fr="Solution" data-en="Solution">Solution</div><p data-fr="Portail de réservation en ligne avec rappels SMS automatiques et tableau de bord pour les mécaniciens." data-en="Online booking portal with automatic SMS reminders and mechanic dashboard.">Portail de réservation en ligne, rappels SMS, dashboard mécaniciens.</p></div>
+        <div class="case-metrics"><div class="cm"><div class="cm-val">+45%</div><div class="cm-lbl" data-fr="Rendez-vous" data-en="Appointments">Rendez-vous</div></div><div class="cm"><div class="cm-val">92%</div><div class="cm-lbl" data-fr="Présence" data-en="Show Rate">Présence</div></div><div class="cm"><div class="cm-val">3.2×</div><div class="cm-lbl" data-fr="ROI 90 jours" data-en="ROI 90d">ROI 90j</div></div></div>
+      </div>
+    </div>
+    <div class="case-card reveal d2">
+      <div class="case-head"><div class="case-ind" data-fr="🛒 Commerce · Québec" data-en="🛒 E-Commerce · Québec">🛒 Commerce · Québec</div><h3 data-fr="API E-Commerce Sur Mesure" data-en="Custom E-Commerce API">API E-Commerce Sur Mesure</h3><div class="case-type" data-fr="Backend & Architecture API" data-en="Backend & API Architecture">Backend & Architecture API</div></div>
+      <div class="case-body">
+        <div class="case-sec"><div class="case-sec-lbl" data-fr="Problème" data-en="Problem">Problème</div><p data-fr="Limites de Shopify atteintes. Inventaire déconnecté de l'entrepôt, synchronisation lente et erreurs fréquentes." data-en="Shopify limits reached. Inventory disconnected from warehouse, slow sync, frequent errors.">Limites Shopify. Inventaire déconnecté, synchro lente, erreurs fréquentes.</p></div>
+        <div class="case-sec"><div class="case-sec-lbl" data-fr="Solution" data-en="Solution">Solution</div><p data-fr="API REST sur mesure connectant Shopify, l'entrepôt et le partenaire d'expédition en temps réel." data-en="Custom REST API connecting Shopify, warehouse, and shipping partner in real time.">API REST sur mesure connectant Shopify, entrepôt et expédition en temps réel.</p></div>
+        <div class="case-metrics"><div class="cm"><div class="cm-val">−65%</div><div class="cm-lbl" data-fr="Délai exécution" data-en="Fulfillment">Exécution</div></div><div class="cm"><div class="cm-val">0</div><div class="cm-lbl" data-fr="Erreurs" data-en="Errors">Erreurs</div></div><div class="cm"><div class="cm-val">+28%</div><div class="cm-lbl" data-fr="Revenus" data-en="Revenue">Revenus</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTHORITY -->
+<section class="authority" id="authority">
+  <div class="auth-inner">
+    <div class="avatar-wrap reveal">
+      <div class="avatar-container">
+        <div class="avatar-ring1"></div>
+        <div class="avatar-ring2"></div>
+        <div class="avatar-inner">
+          <!-- Avatar SVG stylisé. Pour remplacer par ta photo:
+               Efface ce SVG et mets: <img src="photo.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top;"> -->
+          <svg width="170" height="170" viewBox="0 0 170 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#F59E0B"/><stop offset="100%" style="stop-color:#D97706"/></linearGradient>
+              <radialGradient id="g2" cx="50%" cy="40%" r="50%"><stop offset="0%" style="stop-color:#F59E0B;stop-opacity:0.15"/><stop offset="100%" style="stop-color:#F59E0B;stop-opacity:0"/></radialGradient>
+              <clipPath id="cc"><circle cx="85" cy="85" r="82"/></clipPath>
+            </defs>
+            <circle cx="85" cy="85" r="82" fill="#0A1428" stroke="rgba(245,158,11,0.2)" stroke-width="1"/>
+            <circle cx="85" cy="85" r="82" fill="url(#g2)"/>
+            <!-- Corps / épaules -->
+            <ellipse cx="85" cy="158" rx="55" ry="35" fill="url(#g1)" opacity="0.8" clip-path="url(#cc)"/>
+            <rect x="60" y="110" width="50" height="50" rx="10" fill="url(#g1)" opacity="0.75" clip-path="url(#cc)"/>
+            <!-- Cou -->
+            <rect x="76" y="96" width="18" height="18" rx="5" fill="#D97706" opacity="0.9"/>
+            <!-- Tête -->
+            <ellipse cx="85" cy="78" rx="26" ry="28" fill="#F59E0B"/>
+            <!-- Oreilles -->
+            <ellipse cx="59" cy="78" rx="5.5" ry="8" fill="#D97706" opacity="0.9"/>
+            <ellipse cx="111" cy="78" rx="5.5" ry="8" fill="#D97706" opacity="0.9"/>
+            <!-- Cheveux -->
+            <path d="M59 66 Q62 46 85 44 Q108 46 111 66 Q106 56 85 54 Q64 56 59 66Z" fill="#92400E" opacity="0.95"/>
+            <path d="M59 66 Q57 58 59 52 Q62 44 85 42 Q108 44 111 52 Q113 58 111 66" stroke="#92400E" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <!-- Yeux -->
+            <ellipse cx="76" cy="74" rx="5" ry="5.5" fill="#1E293B"/>
+            <ellipse cx="94" cy="74" rx="5" ry="5.5" fill="#1E293B"/>
+            <circle cx="77.5" cy="72.5" r="1.5" fill="white" opacity="0.9"/>
+            <circle cx="95.5" cy="72.5" r="1.5" fill="white" opacity="0.9"/>
+            <!-- Sourcils -->
+            <path d="M70 67 Q76 64 82 67" stroke="#92400E" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <path d="M88 67 Q94 64 100 67" stroke="#92400E" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <!-- Nez -->
+            <ellipse cx="85" cy="83" rx="3.5" ry="4" fill="#D97706" opacity="0.55"/>
+            <!-- Sourire -->
+            <path d="M76 90 Q85 97 94 90" stroke="#92400E" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.7"/>
+            <!-- Reflet -->
+            <ellipse cx="72" cy="62" rx="7" ry="3" fill="white" opacity="0.06" transform="rotate(-30 72 62)"/>
+          </svg>
+        </div>
+        <div class="avatar-glow-bottom"></div>
+      </div>
+      <div class="avatar-badge">
+        <strong data-fr="Junior" data-en="Junior">Junior</strong>
+        <span data-fr="Dev Full-Stack · QC" data-en="Full-Stack Dev · QC">Dev Full-Stack · QC</span>
+      </div>
+    </div>
+
+    <div class="reveal d1">
+      <div class="sec-label" data-fr="La Personne Derrière le Travail" data-en="The Person Behind the Work">La Personne Derrière le Travail</div>
+      <h2 class="auth-name" data-fr="Votre partenaire de croissance numérique." data-en="Your digital growth partner.">Votre partenaire de croissance numérique.</h2>
+      <div class="auth-title" data-fr="Développeur Full-Stack · Québec, Canada" data-en="Full-Stack Developer · Québec, Canada">Développeur Full-Stack · Québec, Canada</div>
+      <p class="auth-bio" data-fr="Je ne suis pas un freelance qui fait des sites web. Je suis un partenaire de croissance numérique qui construit des systèmes de revenus pour les entreprises québécoises sérieuses." data-en="I'm not a freelancer who makes websites. I'm a digital growth partner who builds revenue systems for serious Québec businesses.">Je ne suis pas un freelance qui fait des sites web. Je suis un partenaire de croissance numérique qui construit des systèmes de revenus pour les entreprises québécoises sérieuses.</p>
+      <p class="auth-bio" data-fr="En tant que développeur junior ambitieux basé au Québec, j'apporte une énergie et une faim de résultats que les grandes agences facturent 10× plus cher. Chaque projet est une priorité — pas un ticket dans une file d'attente." data-en="As an ambitious junior developer based in Québec, I bring energy and hunger for results that big agencies charge 10× more for. Every project is a priority — not a ticket in a queue.">En tant que développeur junior ambitieux, j'apporte une énergie que les grandes agences facturent 10× plus cher. Chaque projet est une priorité.</p>
+      <div class="auth-tags">
+        <span class="auth-tag">React & Next.js</span>
+        <span class="auth-tag">Node.js</span>
+        <span class="auth-tag">PostgreSQL</span>
+        <span class="auth-tag">Tailwind CSS</span>
+        <span class="auth-tag">APIs REST</span>
+        <span class="auth-tag">SEO Local QC</span>
+      </div>
+      <div class="auth-social">
+        <a class="auth-social-link s-github" href="#" target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>GitHub</a>
+        <a class="auth-social-link s-instagram" href="#" target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>Instagram</a>
+      </div>
+      <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" data-fr="Planifier un appel découverte →" data-en="Schedule a Discovery Call →">Planifier un appel découverte →</button>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS — généraux, sans noms ni chiffres -->
+<section class="testimonials">
+  <div class="center-header reveal" style="margin-bottom:3.5rem;">
+    <div class="sec-label" data-fr="Ce Que Disent les Clients" data-en="Client Feedback">Ce Que Disent les Clients</div>
+    <h2 class="sec-headline" data-fr="Des résultats, pas des promesses." data-en="Results, not promises.">Des résultats, pas des promesses.</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi reveal">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote" data-fr="«&nbsp;Notre système de réservation a complètement transformé notre façon de travailler. Les clients réservent à toute heure, l'équipe passe moins de temps au téléphone — un vrai changement pour le business.&nbsp;»" data-en="«&nbsp;Our booking system completely transformed the way we work. Customers book any time, the team spends less time on the phone — a real game-changer for the business.&nbsp;»">«&nbsp;Notre système de réservation a complètement transformé notre façon de travailler. Les clients réservent à toute heure — un vrai changement.&nbsp;»</p>
+      <div class="testi-industry" data-fr="🔧 Garage automobile · Québec" data-en="🔧 Auto Garage · Québec">🔧 Garage automobile · Québec</div>
+    </div>
+    <div class="testi reveal d1">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote" data-fr="«&nbsp;Le site génère vraiment des revenus. Les commandes en ligne ont explosé depuis le lancement. Je recommande à tous les propriétaires de PME qui veulent une présence numérique sérieuse.&nbsp;»" data-en="«&nbsp;The site genuinely generates revenue. Online orders exploded since launch. I recommend it to any SMB owner who wants a serious digital presence.&nbsp;»">«&nbsp;Le site génère vraiment des revenus. Les commandes en ligne ont explosé depuis le lancement.&nbsp;»</p>
+      <div class="testi-industry" data-fr="🍽️ Restaurant · Montréal, QC" data-en="🍽️ Restaurant · Montréal, QC">🍽️ Restaurant · Montréal, QC</div>
+    </div>
+    <div class="testi reveal d2">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote" data-fr="«&nbsp;Travail sérieux et professionnel. Notre ancien site nous coûtait des clients sans qu'on s'en rende compte. Le nouveau backend a automatisé des heures de tâches répétitives chaque semaine.&nbsp;»" data-en="«&nbsp;Serious and professional work. Our old site was losing us clients without us realizing it. The new backend automated hours of repetitive tasks every week.&nbsp;»">«&nbsp;Travail sérieux et professionnel. Notre ancien site nous coûtait des clients. Le nouveau backend a automatisé des heures de travail par semaine.&nbsp;»</p>
+      <div class="testi-industry" data-fr="🏗️ Entrepreneur général · Québec" data-en="🏗️ General Contractor · Québec">🏗️ Entrepreneur général · Québec</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-inner">
+    <div class="reveal">
+      <div class="sec-label" data-fr="Parlons Croissance" data-en="Let's Talk Growth">Parlons Croissance</div>
+      <h2 class="sec-headline" data-fr="Prêt à faire croître votre <span style='color:var(--gold);font-style:italic'>entreprise?</span>" data-en="Ready to scale your <span style='color:var(--gold);font-style:italic'>business?</span>">Prêt à faire croître votre <span style="color:var(--gold);font-style:italic">entreprise?</span></h2>
+      <p class="contact-sub" data-fr="Chaque semaine sans système numérique performant, c'est des revenus laissés sur la table. Remplissez le formulaire — je vous réponds sous 24h." data-en="Every week without a high-performing digital system is revenue left on the table. Fill the form — I'll reply within 24h.">Chaque semaine sans système numérique performant, c'est des revenus laissés sur la table. Remplissez le formulaire — je réponds sous 24h.</p>
+      <div class="cd-rows">
+        <div class="cd-row"><div class="cd-icon">📍</div><div><div class="cd-lbl" data-fr="Basé au" data-en="Based in">Basé au</div><div class="cd-val">Québec, Canada</div></div></div>
+        <div class="cd-row"><div class="cd-icon">📧</div><div><div class="cd-lbl">Email</div><div class="cd-val"><a href="mailto:mike.john.freelencer@gmail.com" style="color:var(--gold);text-decoration:none;">mike.john.freelencer@gmail.com</a></div></div></div>
+        <div class="cd-row"><div class="cd-icon">⏱</div><div><div class="cd-lbl" data-fr="Disponibilité" data-en="Availability">Disponibilité</div><div class="cd-val" data-fr="2–3 clients / trimestre" data-en="2–3 clients / quarter">2–3 clients / trimestre</div></div></div>
+        <div class="cd-row"><div class="cd-icon">⚡</div><div><div class="cd-lbl" data-fr="Réponse garantie" data-en="Guaranteed reply">Réponse garantie</div><div class="cd-val" data-fr="Sous 24 heures" data-en="Within 24 hours">Sous 24 heures</div></div></div>
+      </div>
+      <div class="contact-social">
+        <a class="contact-social-link s-github" href="#" target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>GitHub</a>
+        <a class="contact-social-link s-instagram" href="#" target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>Instagram</a>
+      </div>
+    </div>
+
+    <div class="contact-form reveal d1">
+      <div class="form-title" data-fr="ENVOYEZ-MOI UN MESSAGE" data-en="SEND ME A MESSAGE">ENVOYEZ-MOI UN MESSAGE</div>
+      <div class="form-row">
+        <div class="fg"><label data-fr="Votre nom *" data-en="Your name *">Votre nom *</label><input type="text" id="f-name" placeholder="Jean Tremblay"></div>
+        <div class="fg"><label data-fr="Votre entreprise" data-en="Your company">Votre entreprise</label><input type="text" id="f-company" placeholder="Garage Tremblay Inc."></div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label>Email *</label><input type="email" id="f-email" placeholder="jean@exemple.ca"></div>
+        <div class="fg"><label data-fr="Téléphone" data-en="Phone">Téléphone</label><input type="tel" id="f-phone" placeholder="514-555-0123"></div>
+      </div>
+      <div class="fg">
+        <label data-fr="Service qui vous intéresse" data-en="Service of interest">Service qui vous intéresse</label>
+        <select id="f-service">
+          <option value="" data-fr="— Choisissez —" data-en="— Choose —">— Choisissez —</option>
+          <option value="Site Web ($800+)" data-fr="Site Web — à partir de $800" data-en="Website — starting at $800">Site Web — à partir de $800</option>
+          <option value="Site + Backend ($2000+)" data-fr="Site + Backend — à partir de $2 000" data-en="Site + Backend — starting at $2,000">Site + Backend — à partir de $2 000</option>
+          <option value="Projet Complexe ($4000+)" data-fr="Projet Complexe — à partir de $4 000" data-en="Complex Project — starting at $4,000">Projet Complexe — à partir de $4 000</option>
+          <option value="Maintenance ($99/mois)" data-fr="Maintenance mensuelle — $99/mois" data-en="Monthly maintenance — $99/month">Maintenance mensuelle — $99/mois</option>
+          <option value="Autre" data-fr="Autre / Pas encore sûr" data-en="Other / Not sure yet">Autre / Pas encore sûr</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label data-fr="Décrivez votre projet *" data-en="Describe your project *">Décrivez votre projet *</label>
+        <textarea id="f-message" placeholder="Parlez-moi de votre entreprise et de ce que vous cherchez à accomplir..."></textarea>
+      </div>
+      <button class="form-submit" id="f-btn" onclick="submitForm()">
+        <span id="f-btn-text" data-fr="Envoyer ma demande →" data-en="Send my request →">Envoyer ma demande →</span>
+      </button>
+      <div class="form-msg ok" id="f-ok"></div>
+      <div class="form-msg err" id="f-err"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="foot-logo">Tou<span>Dev</span></div>
+    <div class="foot-center">
+      <div class="foot-social">
+        <a class="foot-slink s-github" href="#" target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
+        <a class="foot-slink s-instagram" href="#" target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+      </div>
+      <p class="foot-text" data-fr="© 2025 TouDev. Tous droits réservés." data-en="© 2025 TouDev. All rights reserved.">© 2025 TouDev. Tous droits réservés.</p>
+    </div>
+    <ul class="foot-links">
+      <li><a href="mailto:mike.john.freelencer@gmail.com">Email</a></li>
+      <li><a href="#pricing" data-fr="Tarifs" data-en="Pricing">Tarifs</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+// ============================================================
+// ⚙ CONFIG — CHANGE TES LIENS ICI (2 lignes seulement)
+// ============================================================
+const GITHUB_URL    = 'https://github.com/TON_USERNAME'      // ← remplace TON_USERNAME
+const INSTAGRAM_URL = 'https://instagram.com/TON_USERNAME'   // ← remplace TON_USERNAME
+const CONTACT_EMAIL = 'mike.john.freelencer@gmail.com'
+// ============================================================
+
+// Applique les liens sur tous les éléments .s-github et .s-instagram
+function applyLinks() {
+  document.querySelectorAll('.s-github').forEach(el => el.href = GITHUB_URL)
+  document.querySelectorAll('.s-instagram').forEach(el => el.href = INSTAGRAM_URL)
+}
+applyLinks()
+
+// CURSOR
+const cur = document.getElementById('cur'), ring = document.getElementById('curRing')
+let mx=0,my=0,rx=0,ry=0
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'})
+;(function loop(){rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})()
+
+// LANG
+let lang='fr'
+function setLang(l){
+  lang=l
+  document.getElementById('btn-fr').classList.toggle('active',l==='fr')
+  document.getElementById('btn-en').classList.toggle('active',l==='en')
+  document.querySelectorAll('[data-fr]').forEach(el=>{
+    const v=el.getAttribute('data-'+l)
+    if(v!==null)el.innerHTML=v
+  })
+  document.documentElement.lang=l
+}
+
+// SCROLL REVEAL
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')}),{threshold:0.08})
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el))
+
+// PARALLAX
+window.addEventListener('scroll',()=>{
+  const s=window.scrollY
+  const hc=document.querySelector('.hero-content'), hg=document.querySelector('.hero-glow')
+  if(hc)hc.style.transform=`translateY(${s*0.12}px)`
+  if(hg)hg.style.transform=`translateY(calc(-50% + ${s*0.06}px))`
+})
+
+// FORM SUBMIT
+async function submitForm(){
+  const name=document.getElementById('f-name').value.trim()
+  const email=document.getElementById('f-email').value.trim()
+  const message=document.getElementById('f-message').value.trim()
+  const company=document.getElementById('f-company').value.trim()
+  const phone=document.getElementById('f-phone').value.trim()
+  const service=document.getElementById('f-service').value
+
+  const err=document.getElementById('f-err')
+  const ok=document.getElementById('f-ok')
+  const btn=document.getElementById('f-btn')
+  const btnText=document.getElementById('f-btn-text')
+
+  if(!name||!email||!message){
+    err.textContent=lang==='fr'
+      ?'✕ Veuillez remplir les champs nom, email et message.'
+      :'✕ Please fill in your name, email, and message.'
+    err.style.display='block'
+    setTimeout(()=>err.style.display='none',4000)
+    return
+  }
+
+  btn.disabled=true
+  btnText.textContent=lang==='fr'?'Envoi en cours...':'Sending...'
+
+  // Tentative d'envoi vers l'API admin Next.js (si dispo sur le même domaine)
+  try {
+    const res=await fetch('/api/leads',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name,company,email,phone,service:service||'Non spécifié',status:'new',notes:message})
+    })
+    if(res.ok)console.log('Lead sauvegardé dans Supabase')
+  } catch(e){/* API non disponible — fallback mailto */}
+
+  // Fallback mailto (ouvre le client email)
+  const sub=encodeURIComponent(`[TouDev] Nouveau lead — ${name}${company?' ('+company+')':''}`)
+  const body=encodeURIComponent(`Nom: ${name}\nEntreprise: ${company||'—'}\nEmail: ${email}\nTél: ${phone||'—'}\nService: ${service||'—'}\n\nMessage:\n${message}`)
+  window.location.href=`mailto:${CONTACT_EMAIL}?subject=${sub}&body=${body}`
+
+  btn.disabled=false
+  btnText.textContent=lang==='fr'?'Envoyer ma demande →':'Send my request →'
+
+  ok.textContent=lang==='fr'
+    ?'✓ Message envoyé! Je vous réponds sous 24h.'
+    :'✓ Message sent! I\'ll get back to you within 24h.'
+  ok.style.display='block'
+  setTimeout(()=>ok.style.display='none',6000)
+
+  ;['f-name','f-company','f-email','f-phone','f-message'].forEach(id=>document.getElementById(id).value='')
+  document.getElementById('f-service').value=''
+}
+
+setLang('fr')
+</script>
+</body>
+</html>
